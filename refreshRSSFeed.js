@@ -1,9 +1,13 @@
 import * as prismic from "@prismicio/client";
 
+import { dirname } from "path";
 import ellipsize from "ellipsize";
 import episodeToRSS from "./episodeToRSS.js";
 import fetch from "node-fetch";
+import { fileURLToPath } from "url";
 import fs from "fs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const repoName = "chl-cms";
 const endpoint = prismic.getRepositoryEndpoint(repoName);
@@ -13,7 +17,7 @@ const init = async () => {
 	const episodes = await client.getAllByType("podcast");
 
 	fs.writeFileSync(
-		"./rss.xml",
+		`${__dirname}/rss.xml`,
 		`<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 <channel>
 <title>Christian Heritage London Podcast</title>
@@ -47,7 +51,7 @@ ${episodes
 	);
 
 	fs.appendFileSync(
-		"./log",
+		`${__dirname}/log`,
 		`[${new Date().toJSON()}] Refreshed podcast feed`
 	);
 };
