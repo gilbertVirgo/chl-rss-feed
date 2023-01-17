@@ -1,5 +1,6 @@
 import * as prismic from "@prismicio/client";
 
+import ellipsize from "ellipsize";
 import episodeToRSS from "./episodeToRSS.js";
 import fetch from "node-fetch";
 import fs from "fs";
@@ -43,6 +44,11 @@ ${episodes
 </channel>
 </rss>    
 `
+	);
+
+	fs.appendFileSync(
+		"./log",
+		`[${new Date().toJSON()}] Refreshed podcast feed`
 	);
 };
 
