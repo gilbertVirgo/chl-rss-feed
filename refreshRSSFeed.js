@@ -13,7 +13,7 @@ const init = async () => {
 	const episodes = await client.getAllByType("podcast");
 
 	fs.writeFileSync(
-		"./output.rss",
+		"./rss.xml",
 		`<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 <channel>
 <title>Christian Heritage London Podcast</title>
