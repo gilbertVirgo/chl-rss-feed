@@ -12,5 +12,5 @@ export default ({ title, description, audio_url, original_date_published }) => {
     <itunes:duration>00:00:00</itunes:duration>
     <guid>${audio_url.url}</guid>
     <pubDate>${rfc822Date(new Date(original_date_published))}</pubDate>
-</item>`;
+</item>`.replace(/&/g, "&amp;");
 };
