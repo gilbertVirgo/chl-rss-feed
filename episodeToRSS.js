@@ -1,5 +1,7 @@
 import * as prismicH from "@prismicio/helpers";
 
+import rfc822Date from "rfc822-date";
+
 export default ({ title, description, audio_url, original_date_published }) => {
 	return `<item>
     <title>${title}</title>
@@ -9,6 +11,6 @@ export default ({ title, description, audio_url, original_date_published }) => {
     <enclosure url="${audio_url.url}" length="0" type="audio/mpeg"/>
     <itunes:duration>00:00:00</itunes:duration>
     <guid>${audio_url.url}</guid>
-    <pubDate>${new Date(original_date_published).toString()}</pubDate>
+    <pubDate>${rfc822Date(new Date(original_date_published))}</pubDate>
 </item>`;
 };

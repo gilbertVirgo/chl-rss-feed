@@ -21,7 +21,8 @@
 		"@prismicio/client": "^6.7.3",
 		"@prismicio/helpers": "^2.3.8",
 		"ellipsize": "^0.5.1",
-		"node-fetch": "^3.3.0"
+		"node-fetch": "^3.3.0",
+		"rfc822-date": "^0.0.3"
 	},
 	"type": "module"
 }
