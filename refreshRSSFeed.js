@@ -38,7 +38,7 @@ const init = async () => {
 </itunes:owner>
 <itunes:explicit>No</itunes:explicit>
 <itunes:image href="https://is5-ssl.mzstatic.com/image/thumb/Podcasts125/v4/f7/87/1f/f7871fc7-e872-8acc-ad53-a824e98ba7e2/mza_15772983630683249442.jpg/626x0w.webp"/>
-<itunes:category text="Religion & Spirituality"/>
+<itunes:category text="Religion &amp; Spirituality"/>
 <itunes:subtitle> Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city. </itunes:subtitle>
 <atom:link href="http://api.christianheritagelondon.org/rss.xml" rel="self" type="application/rss+xml"/>
 ${episodes
