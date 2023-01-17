@@ -52,7 +52,7 @@ ${episodes
 
 	fs.appendFileSync(
 		`${__dirname}/log`,
-		`[${new Date().toJSON()}] Refreshed podcast feed`
+		`[${new Date().toJSON()}] Refreshed podcast feed\r\n`
 	);
 };
 
