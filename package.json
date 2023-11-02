@@ -18,12 +18,17 @@
 	},
 	"homepage": "https://github.com/gilbertVirgo/chl-rss-feed#readme",
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.440.0",
 		"@prismicio/client": "^6.7.3",
 		"@prismicio/helpers": "^2.3.8",
+		"dayjs": "^1.11.10",
+		"dotenv": "^16.3.1",
 		"ellipsize": "^0.5.1",
 		"escape-html": "^1.0.3",
+		"get-audio-duration": "^4.0.1",
 		"node-fetch": "^3.3.0",
-		"rfc822-date": "^0.0.3"
+		"rfc822-date": "^0.0.3",
+		"sanitize-filename": "^1.6.3"
 	},
 	"type": "module"
 }

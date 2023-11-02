@@ -1,27 +1,20 @@
-import * as prismic from "@prismicio/client";
+import formatEpisode from "./formatEpisode.js";
+import log from "./log.js";
 
-import { dirname } from "path";
-import ellipsize from "ellipsize";
-import episodeToRSS from "./episodeToRSS.js";
-import fetch from "node-fetch";
-import { fileURLToPath } from "url";
-import fs from "fs";
+export default async (episodes) => {
+	let formattedEpisodes = [];
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+	for (const { data: episode } of episodes.sort(
+		({ data: a }, { data: b }) =>
+			new Date(b.original_date_published) -
+			new Date(a.original_date_published)
+	)) {
+		const formattedEpisode = await formatEpisode(episode);
 
-const repoName = "chl-cms";
-const endpoint = prismic.getRepositoryEndpoint(repoName);
-const client = prismic.createClient(endpoint, { fetch });
+		formattedEpisodes.push(formattedEpisode);
+	}
 
-const init = async () => {
-	const episodes = await client.getAllByType("podcast");
-
-	// Get output directory from args.
-	const outputDir = process.argv[2];
-
-	fs.writeFileSync(
-		`${outputDir || __dirname}/rss.xml`,
-		`<?xml version="1.0" encoding="UTF-8"?>
+	return `<?xml version="1.0" encoding="UTF-8"?>
 		<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 <channel>
 <title>Christian Heritage London Podcast</title>
@@ -41,23 +34,8 @@ const init = async () => {
 <itunes:category text="Religion &amp; Spirituality"/>
 <itunes:subtitle> Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city. </itunes:subtitle>
 <atom:link href="http://api.christianheritagelondon.org/rss.xml" rel="self" type="application/rss+xml"/>
-${episodes
-	.sort(
-		({ data: a }, { data: b }) =>
-			new Date(b.original_date_published) -
-			new Date(a.original_date_published)
-	)
-	.map(({ data }) => episodeToRSS(data))
-	.join("\n")}
+${formattedEpisodes.join("\n")}
 </channel>
 </rss>    
-`
-	);
-
-	fs.appendFileSync(
-		`${__dirname}/log`,
-		`[${new Date().toJSON()}] Refreshed podcast feed\r\n`
-	);
+`;
 };
-
-init();
