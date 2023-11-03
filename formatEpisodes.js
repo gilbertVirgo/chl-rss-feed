@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import formatEpisode from "./formatEpisode.js";
 import fs from "fs";
 import getDirname from "./getDirname.js";
@@ -25,8 +26,12 @@ export default async (episodes) => {
 		<link>https://www.christianheritagelondon.org</link>
 		<description> Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city. </description>
 		<language>en-gb</language>
-		<copyright>Copyright Christian Heritage London 2017</copyright>
-		<lastBuildDate>Mon, 17 Apr 2017 20:00:00 GMT</lastBuildDate>
+		<copyright>Copyright Christian Heritage London ${dayjs().format(
+			"YYYY"
+		)}</copyright>
+		<lastBuildDate>${dayjs().format(
+			"ddd[, ]D MMM YYYY HH:mm:ss[ GMT]"
+		)}</lastBuildDate>
 		<itunes:author>Christian Heritage London</itunes:author>
 		<itunes:summary>Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city. On the Christian Heritage London podcast we meet Christian leaders who serve the church in the purpose, perspective and power of the gospel. </itunes:summary>
 		<itunes:owner>
