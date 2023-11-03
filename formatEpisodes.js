@@ -8,8 +8,6 @@ import path from "path";
 export default async (episodes) => {
 	let formattedEpisodes = [];
 
-	const __dirname = getDirname(import.meta.url);
-
 	for (const { data: episode } of episodes.sort(
 		({ data: a }, { data: b }) =>
 			new Date(b.original_date_published) -
@@ -39,12 +37,14 @@ export default async (episodes) => {
 		<itunes:email>info@christianheritagelondon.org</itunes:email>
 		</itunes:owner>
 		<itunes:explicit>No</itunes:explicit>
-		<itunes:image href="https://is5-ssl.mzstatic.com/image/thumb/Podcasts125/v4/f7/87/1f/f7871fc7-e872-8acc-ad53-a824e98ba7e2/mza_15772983630683249442.jpg/626x0w.webp"/>
+		<itunes:image href="https://chlmedia.s3.eu-west-2.amazonaws.com/chl-podcast-image.jpg"/>
 		<itunes:category text="Religion &amp; Spirituality"/>
-		<itunes:subtitle> Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city. </itunes:subtitle>
-		<atom:link href="http://api.christianheritagelondon.org/rss.xml" rel="self" type="application/rss+xml"/>
+		<itunes:subtitle>Christian Heritage London exists to serve London's churches and visitors, offering equipping events and telling the stories of the massive impact of the gospel in this city.</itunes:subtitle>
+		<atom:link href="https://chl-rss-feed.s3.eu-west-2.amazonaws.com/rss.xml" rel="self" type="application/rss+xml"/>
 		${formattedEpisodes.join("\n")}
 	</channel>
 </rss>    
 `;
 };
+
+// <atom:link href="http://api.christianheritagelondon.org/rss.xml" rel="self" type="application/rss+xml"/>

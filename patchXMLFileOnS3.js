@@ -54,6 +54,8 @@ export default async (xmlFileContents) => {
 			Body: Buffer.from(xmlFileContents, "utf-8"),
 			Bucket: AWS_BUCKET_NAME,
 			Key: "rss.xml",
+			ContentType: "text/xml",
+			ACL: "public-read",
 		}),
 	];
 
