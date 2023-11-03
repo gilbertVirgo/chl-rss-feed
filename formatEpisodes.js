@@ -1,8 +1,13 @@
 import formatEpisode from "./formatEpisode.js";
+import fs from "fs";
+import getDirname from "./getDirname.js";
 import log from "./log.js";
+import path from "path";
 
 export default async (episodes) => {
 	let formattedEpisodes = [];
+
+	const __dirname = getDirname(import.meta.url);
 
 	for (const { data: episode } of episodes.sort(
 		({ data: a }, { data: b }) =>
@@ -10,7 +15,6 @@ export default async (episodes) => {
 			new Date(a.original_date_published)
 	)) {
 		const formattedEpisode = await formatEpisode(episode);
-
 		formattedEpisodes.push(formattedEpisode);
 	}
 

@@ -1,5 +1,7 @@
 .env
 node_modules
 log
-rss.xml
-audio-files
+
+# Auto generated files ..
+downloads
+episodeDurations.json

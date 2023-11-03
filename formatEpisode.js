@@ -1,17 +1,15 @@
 import * as prismicH from "@prismicio/helpers";
 
-import fetch, { Headers } from "node-fetch";
-
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration.js";
 import escape from "escape-html";
+import fetch from "node-fetch";
 import fs from "fs";
 import { getAudioDurationInSeconds } from "get-audio-duration";
 import getDirname from "./getDirname.js";
 import log from "./log.js";
 import path from "path";
 import rfc822Date from "rfc822-date";
-import sanitize from "sanitize-filename";
 
 dayjs.extend(duration);
 
@@ -21,32 +19,54 @@ export default async ({
 	audio_url,
 	original_date_published,
 }) => {
-	const dirPath = path.join(getDirname(import.meta.url), "audio-files");
+	const __dirname = getDirname(import.meta.url);
 
-	if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath);
+	const episodeDurations = JSON.parse(
+		fs.readFileSync(path.join(__dirname, "episodeDurations.json"))
+	);
 
-	const fileExtension = audio_url.url.split(".").slice(-1);
-	const fileName = `${sanitize(title)}.${fileExtension}`;
-	const filePath = path.join(dirPath, fileName);
+	const episode = episodeDurations.find(
+		(episode) => episode.title === title
+	) || { title };
 
-	if (!fs.existsSync(filePath)) {
-		log("info", `${fileName} has not yet been fetched. Fetching now ..`);
+	if (!episode.duration) {
+		log(
+			"info",
+			`Episode '${title}' has not yet been fetched. Fetching now`
+		);
 
+		// Create downloads folder if doesn't exist
+		const downloadsDirectoryPath = path.join(__dirname, "downloads");
+		if (!fs.existsSync(downloadsDirectoryPath))
+			fs.mkdirSync(downloadsDirectoryPath);
+
+		// Fetch the audio file for analysis
 		const audioFile = await fetch(audio_url.url).then((body) =>
 			body.arrayBuffer()
 		);
-		await fs.promises.writeFile(filePath, Buffer.from(audioFile));
+		const fileExtension = audio_url.url.split(".").slice(-1);
+		const fileName = `audio.${fileExtension}`;
+		const filePath = path.join(downloadsDirectoryPath, fileName);
+
+		fs.writeFileSync(filePath, Buffer.from(audioFile));
+
+		// Write the duration to episodeDurations.json
+		log("info", `Analysing and recording ${fileName} duration`);
+		episode.duration = await getAudioDurationInSeconds(filePath);
+
+		fs.writeFileSync(
+			path.join(__dirname, "episodeDurations.json"),
+			JSON.stringify([episode, ...episodeDurations])
+		);
 	}
 
-	const audioDurationInSeconds = await getAudioDurationInSeconds(filePath);
-
-	const durationObject = dayjs.duration(audioDurationInSeconds, "seconds");
+	const durationObject = dayjs.duration(episode.duration, "seconds");
 
 	const xmlItem = `<item>
     <title>${escape(title)}</title>
     <description>${escape(prismicH.asText(description))}</description>
     <itunes:image href="https://is5-ssl.mzstatic.com/image/thumb/Podcasts125/v4/f7/87/1f/f7871fc7-e872-8acc-ad53-a824e98ba7e2/mza_15772983630683249442.jpg/626x0w.webp"/>
-    <link>http://www.christianheritagelondon.org</link>
+    <link>https://www.christianheritagelondon.org</link>
     <enclosure url="${audio_url.url}" length="${parseInt(
 		durationObject.asMilliseconds()
 	)}" type="audio/mpeg"/>
