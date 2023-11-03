@@ -8,12 +8,12 @@ const init = async () => {
 		const episodes = await getEpisodes();
 		log("prismic", episodes);
 
-		const formattedEpisodes = formatEpisodes(episodes); // json -> xml
+		const formattedEpisodes = await formatEpisodes(episodes); // json -> xml
 
 		const awsResponse = await patchXMLFileOnS3(formattedEpisodes);
 		log("aws", awsResponse);
 	} catch (error) {
-		log("error", error);
+		log("error", error.stack);
 	}
 };
 
