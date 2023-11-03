@@ -6,7 +6,7 @@ import patchXMLFileOnS3 from "./patchXMLFileOnS3.js";
 const init = async () => {
 	try {
 		const episodes = await getEpisodes();
-		log("prismic", episodes);
+		log("main", `Successfully got podcast JSON from Prismic`);
 
 		const formattedEpisodes = await formatEpisodes(episodes); // json -> xml
 

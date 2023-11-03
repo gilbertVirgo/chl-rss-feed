@@ -10,6 +10,8 @@ export default (type, message, eventDescriptor = " ") => {
 
 	const logFilePath = path.join(logDirPath, `${type}.log`);
 
+	if (type === "info") console.log(message);
+
 	fs.appendFileSync(
 		logFilePath,
 		`[${dayjs().format("DD/MM/YYYY HH:mm:ss")}]` +

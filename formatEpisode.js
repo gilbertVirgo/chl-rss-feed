@@ -21,13 +21,13 @@ export default async ({
 	audio_url,
 	original_date_published,
 }) => {
+	const dirPath = path.join(getDirname(import.meta.url), "audio-files");
+
+	if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath);
+
 	const fileExtension = audio_url.url.split(".").slice(-1);
 	const fileName = `${sanitize(title)}.${fileExtension}`;
-	const filePath = path.join(
-		getDirname(import.meta.url),
-		"audio-files",
-		fileName
-	);
+	const filePath = path.join(dirPath, fileName);
 
 	if (!fs.existsSync(filePath)) {
 		log("info", `${fileName} has not yet been fetched. Fetching now ..`);
@@ -54,8 +54,6 @@ export default async ({
     <guid>${audio_url.url}</guid>
     <pubDate>${rfc822Date(new Date(original_date_published))}</pubDate>
 </item>`;
-
-	console.log(xmlItem);
 
 	return xmlItem;
 };
