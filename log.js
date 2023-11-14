@@ -4,13 +4,15 @@ import getDirname from "./getDirname.js";
 import path from "path";
 
 export default (type, message, eventDescriptor = " ") => {
+	console.log({ type, message });
+
 	const logDirPath = path.join(getDirname(import.meta.url), "log");
 
 	if (!fs.existsSync(logDirPath)) fs.mkdirSync(logDirPath);
 
 	const logFilePath = path.join(logDirPath, `${type}.log`);
 
-	if (type === "info") console.log(message);
+	// if (type === "info") console.log(message);
 
 	fs.appendFileSync(
 		logFilePath,

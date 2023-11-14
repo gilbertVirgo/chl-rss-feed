@@ -61,7 +61,7 @@ export default async (xmlFileContents) => {
 
 	for (const command of commandChain) {
 		log("aws", "Executing command ", JSON.stringify(command));
-		await client.send(command);
+		await client.send(command).catch(log.bind(null, "error"));
 	}
 
 	return true;
