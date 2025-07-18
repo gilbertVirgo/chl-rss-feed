@@ -52,7 +52,10 @@ export default async ({
 
 		// Write the duration to episodeDurations.json
 		log("info", `Analysing and recording ${fileName} duration`);
-		episode.duration = await getAudioDurationInSeconds(filePath);
+		episode.duration = await getAudioDurationInSeconds(
+			filePath,
+			process.env.FFPROBE_PATH
+		);
 
 		fs.writeFileSync(
 			path.join(__dirname, "episodeDurations.json"),

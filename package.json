@@ -27,7 +27,7 @@
 		"ellipsize": "^0.5.1",
 		"escape-html": "^1.0.3",
 		"get-audio-duration": "^4.0.1",
-		"node-fetch": "^3.3.0",
+		"node-fetch": "^3.3.2",
 		"rfc822-date": "^0.0.3",
 		"sanitize-filename": "^1.6.3"
 	},
