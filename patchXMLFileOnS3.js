@@ -23,6 +23,8 @@ export default async (xmlFileContents) => {
 		},
 	});
 
+	console.log({ AWS_BUCKET_NAME });
+
 	// Unless you delete the object AND THE BUCKET, the file will cache and there's nothing you can do about that.
 	// So I spent (probably) 5 hours getting this to work...
 	const commandChain = [
@@ -33,6 +35,7 @@ export default async (xmlFileContents) => {
 		new DeleteBucketCommand({
 			Bucket: AWS_BUCKET_NAME,
 		}),
+
 		new CreateBucketCommand({
 			Bucket: AWS_BUCKET_NAME,
 			ObjectOwnership: "ObjectWriter",
@@ -40,12 +43,14 @@ export default async (xmlFileContents) => {
 				LocationConstraint: "eu-west-2",
 			},
 		}),
+
 		// This fiesty little command was what I spent literally hours
 		// trying to find. It was buried DEEP in all of the utterly
 		// nonsensical documentation. But found it eventually. Oh joy!
 		new DeletePublicAccessBlockCommand({
 			Bucket: AWS_BUCKET_NAME,
 		}),
+
 		new PutBucketPolicyCommand({
 			Bucket: AWS_BUCKET_NAME,
 			Policy: awsBucketPolicy,
@@ -60,7 +65,7 @@ export default async (xmlFileContents) => {
 	];
 
 	for (const command of commandChain) {
-		log("aws", "Executing command ", JSON.stringify(command));
+		log("aws", "Executing command");
 		await client.send(command).catch(log.bind(null, "error"));
 	}
 

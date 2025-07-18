@@ -1,9 +1,5 @@
 import dayjs from "dayjs";
 import formatEpisode from "./formatEpisode.js";
-import fs from "fs";
-import getDirname from "./getDirname.js";
-import log from "./log.js";
-import path from "path";
 
 export default async (episodes) => {
 	let formattedEpisodes = [];

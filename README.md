@@ -24,3 +24,7 @@ their whole 'versioning system' utterly redundant doesn't it?! So I went about a
 deleting the file and then uploading the new one in its place? Well it _still_ caches even then!
 The only solution (which took me hours to work out) was literally deleting the ENTIRE BUCKET and
 creating it again, then inserting the new file into it. And _finally_, _*that works!*_!
+
+# Running it
+
+`node -r dotenv/config .`
