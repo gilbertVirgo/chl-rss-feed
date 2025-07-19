@@ -5,3 +5,5 @@ log
 # Auto generated files ..
 downloads
 episodeDurations.json
+# Local Netlify folder
+.netlify
