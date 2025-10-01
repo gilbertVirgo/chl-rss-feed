@@ -4,6 +4,10 @@
   functions = "netlify/functions"
   publish = "public"
 
+[functions]
+  # Enable ES modules support
+  node_bundler = "esbuild"
+
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
   #[[redirects]]
