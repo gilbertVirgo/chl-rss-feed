@@ -36,7 +36,7 @@ export const handler = async (event, context) => {
 			};
 		}
 
-		let bucketURL = `https://${process.env.AWS_BUCKET_NAME}.s3.eu-west-2.amazonaws.com/rss.xml`;
+		let bucketURL = `https://${process.env.AWS__BUCKET_NAME}.s3.eu-west-2.amazonaws.com/rss.xml`;
 
 		// Get the directory of the current function file
 		const currentDir = import.meta.url

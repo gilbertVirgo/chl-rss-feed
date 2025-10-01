@@ -67,9 +67,9 @@ Set these in your Netlify dashboard:
 
 ```
 AUTH_TOKEN=your-secure-random-token
-AWS_BUCKET_NAME=your-s3-bucket-name
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS__BUCKET_NAME=your-s3-bucket-name
+AWS__ACCESS_KEY_ID=your-aws-access-key
+AWS__SECRET_ACCESS_KEY=your-aws-secret-key
 PRISMIC_ENDPOINT=your-prismic-api-endpoint
 ```
 
