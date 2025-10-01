@@ -1,6 +1,5 @@
 import formatEpisodes from "./formatEpisodes.js";
 import fs from "fs";
-import getDirname from "./getDirname.js";
 import getEpisodes from "./getEpisodes.js";
 import log from "./log.js";
 import patchXMLFileOnS3 from "./patchXMLFileOnS3.js";
@@ -38,13 +37,17 @@ export const handler = async (event, context) => {
 		}
 
 		let bucketURL = `https://${process.env.AWS_BUCKET_NAME}.s3.eu-west-2.amazonaws.com/rss.xml`;
-		let __dirname = getDirname(import.meta.url);
-		// episodeDurations.json is now in the same directory as the function
-		let episodeDurationsFilePath = path.join(
-			__dirname,
+
+		// Get the directory of the current function file
+		const currentDir = import.meta.url
+			? path.dirname(new URL(import.meta.url).pathname)
+			: process.cwd();
+
+		// Use absolute paths that work in serverless environments
+		let episodeDurationsFilePath = path.resolve(
+			currentDir,
 			"episodeDurations.json"
 		);
-
 		if (!fs.existsSync(episodeDurationsFilePath))
 			fs.writeFileSync(episodeDurationsFilePath, JSON.stringify([]), {
 				encoding: "utf-8",
@@ -105,7 +108,7 @@ export const handler = async (event, context) => {
 		}
 
 		// Clean up
-		let downloadsPath = path.join(__dirname, "downloads");
+		let downloadsPath = path.resolve(currentDir, "downloads");
 		if (fs.existsSync(downloadsPath)) {
 			fs.rmSync(downloadsPath, {
 				recursive: true,

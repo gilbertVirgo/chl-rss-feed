@@ -6,7 +6,6 @@ import escape from "escape-html";
 import fetch from "node-fetch";
 import fs from "fs";
 import { getAudioDurationInSeconds } from "get-audio-duration";
-import getDirname from "./getDirname.js";
 import log from "./log.js";
 import os from "os";
 import path from "path";
@@ -20,16 +19,46 @@ export default async ({
 	audio_url,
 	original_date_published,
 }) => {
-	const __dirname = getDirname(import.meta.url);
-
 	// Determine ffprobe binary name based on OS
 	const platform = os.platform();
-	const ffprobeBinary =
+	const ffprobeBinaryName =
 		platform === "darwin" ? "ffprobe-osx-64" : "ffprobe-linux-64";
 
-	const episodeDurations = JSON.parse(
-		fs.readFileSync(path.join(__dirname, "episodeDurations.json"))
+	// Get the directory of the current function file using a more reliable method
+	let currentDir;
+	try {
+		currentDir = path.dirname(new URL(import.meta.url).pathname);
+		console.log("Using import.meta.url directory:", currentDir);
+	} catch (error) {
+		// Fallback: assume we're in netlify/functions directory
+		currentDir = path.join(process.cwd(), "netlify", "functions");
+		console.log("Using fallback directory:", currentDir);
+	}
+
+	// Use absolute path to the ffprobe binary in the same directory as this function
+	const ffprobeBinary = path.resolve(currentDir, ffprobeBinaryName);
+	console.log("Looking for ffprobe binary at:", ffprobeBinary);
+
+	// Check if the binary exists
+	if (!fs.existsSync(ffprobeBinary)) {
+		throw new Error(`ffprobe binary not found at: ${ffprobeBinary}`);
+	}
+
+	// Ensure the ffprobe binary is executable
+	try {
+		fs.chmodSync(ffprobeBinary, "755");
+	} catch (error) {
+		// Ignore chmod errors in case the file system doesn't support it
+		console.log("Could not set executable permissions:", error.message);
+	}
+
+	const episodeDurationsPath = path.resolve(
+		currentDir,
+		"episodeDurations.json"
 	);
+	console.log("Looking for episodeDurations.json at:", episodeDurationsPath);
+
+	const episodeDurations = JSON.parse(fs.readFileSync(episodeDurationsPath));
 
 	const episode = episodeDurations.find(
 		(episode) => episode.title === title
@@ -37,7 +66,7 @@ export default async ({
 
 	if (!episode.duration) {
 		// Create downloads folder if doesn't exist
-		const downloadsDirectoryPath = path.join(__dirname, "downloads");
+		const downloadsDirectoryPath = path.resolve(currentDir, "downloads");
 		if (!fs.existsSync(downloadsDirectoryPath))
 			fs.mkdirSync(downloadsDirectoryPath);
 
@@ -54,11 +83,11 @@ export default async ({
 		// Write the duration to episodeDurations.json
 		episode.duration = await getAudioDurationInSeconds(
 			filePath,
-			path.join(__dirname, ffprobeBinary)
+			ffprobeBinary
 		);
 
 		fs.writeFileSync(
-			path.join(__dirname, "episodeDurations.json"),
+			path.resolve(currentDir, "episodeDurations.json"),
 			JSON.stringify([episode, ...episodeDurations])
 		);
 	}
